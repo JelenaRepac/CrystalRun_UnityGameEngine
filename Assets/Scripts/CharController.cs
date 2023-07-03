@@ -9,18 +9,24 @@ public class CharController : MonoBehaviour
     public Transform rayStart;
     private Animator anim;
 
+    private GameManager gameManager;
     public GameObject crystalEffect;
 
     // Start is called before the first frame update
     void Awake(){
         rb=GetComponent<Rigidbody>();
         anim= GetComponent<Animator>();
+        gameManager= FindObjectOfType<GameManager>();
     }
 
     private void FixedUpdate(){
         //Prelazak u stanje trcanja
-        
-            anim.SetTrigger("GameStarted");
+        if(!gameManager.gameStarted){
+            return;
+        }else{
+             anim.SetTrigger("GameStarted");
+        }
+           
         
         rb.transform.position= transform.position+transform.forward*2*Time.deltaTime;
     }
@@ -38,7 +44,7 @@ public class CharController : MonoBehaviour
         if(!Physics.Raycast(rayStart.position,-transform.up,out hit, Mathf.Infinity)){
             anim.SetTrigger("IsFalling");
         } else{
-            anim.SetTrigger("notFallingAnymore");
+            //anim.SetTrigger("notFallingAnymore");
         }
 
     }
