@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharController : MonoBehaviour
 {
     private Rigidbody rb;
-    private bool walkingRight=true;
+    private bool walkingRight = true;
     public Transform rayStart;
     private Animator anim;
 
@@ -13,22 +11,27 @@ public class CharController : MonoBehaviour
     public GameObject crystalEffect;
 
     // Start is called before the first frame update
-    void Awake(){
-        rb=GetComponent<Rigidbody>();
-        anim= GetComponent<Animator>();
-        gameManager= FindObjectOfType<GameManager>();
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
-    private void FixedUpdate(){
+    private void FixedUpdate()
+    {
         //Prelazak u stanje trcanja
-        if(!gameManager.gameStarted){
+        if (!gameManager.gameStarted)
+        {
             return;
-        }else{
-             anim.SetTrigger("GameStarted");
         }
-           
-        
-        rb.transform.position= transform.position+transform.forward*2*Time.deltaTime;
+        else
+        {
+            anim.SetTrigger("GameStarted");
+        }
+
+
+        rb.transform.position = transform.position + transform.forward * 2 * Time.deltaTime;
     }
 
 
@@ -36,41 +39,56 @@ public class CharController : MonoBehaviour
     //Definisanje stanje u kome se karakter nalazi
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             Switch();
         }
 
         RaycastHit hit;
-        if(!Physics.Raycast(rayStart.position,-transform.up,out hit, Mathf.Infinity)){
+        if (!Physics.Raycast(rayStart.position, -transform.up, out hit, Mathf.Infinity))
+        {
             anim.SetTrigger("IsFalling");
-        } else{
+        }
+        else
+        {
             //anim.SetTrigger("notFallingAnymore");
         }
 
-        if(transform.position.y < -2)
+        if (transform.position.y < -2)
         {
             gameManager.EndGame();
         }
     }
 
     //Promena pravca kretanja
-    private void Switch(){
-        walkingRight=!walkingRight;
+    private void Switch()
+    {
+        if (gameManager.gameStarted == false)
+        {
+            return;
+        }
 
-        if(walkingRight){
+        walkingRight = !walkingRight;
+
+        if (walkingRight)
+        {
             //promena pravca za 45 stepeni 
-            transform.rotation=Quaternion.Euler(0,45,0);
+            transform.rotation = Quaternion.Euler(0, 45, 0);
         }
         else
-            transform.rotation= Quaternion.Euler(0,-45,0);
+        {
+            transform.rotation = Quaternion.Euler(0, -45, 0);
+        }
+
     }
+
     //Kristal efekat
-    private void OnTriggerEnter(Collider other){
-        if(other.tag=="Crystal"){
-            //Unistava se kristal
-            GameObject g= Instantiate(crystalEffect,rayStart.transform.position, Quaternion.identity);
-            Destroy(g,2);
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Crystal")
+        {
             Destroy(other.gameObject);
+            gameManager.IncreaseScore();
         }
     }
 }
