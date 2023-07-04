@@ -47,6 +47,10 @@ public class CharController : MonoBehaviour
             //anim.SetTrigger("notFallingAnymore");
         }
 
+        if(transform.position.y < -2)
+        {
+            gameManager.EndGame();
+        }
     }
 
     //Promena pravca kretanja
