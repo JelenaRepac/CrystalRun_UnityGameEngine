@@ -15,7 +15,6 @@ public class Road : MonoBehaviour
 
     public void CreateNewRoadPart()
     {
-
         Vector3 spawnPos;
         float chance = Random.Range(0, 100);
 
@@ -38,4 +37,5 @@ public class Road : MonoBehaviour
             gameObject.transform.GetChild(0).gameObject.SetActive(true);
         }
     }
+
 }

@@ -1,7 +1,13 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharController : MonoBehaviour
 {
+    public Road road;
+    public AudioSource speedUpAudio;
+    public Text speedUpText;
+
     private Rigidbody rb;
     private bool walkingRight = true;
     public Transform rayStart;
@@ -9,6 +15,12 @@ public class CharController : MonoBehaviour
 
     private GameManager gameManager;
     public GameObject crystalEffect;
+
+    private float speed = 2;
+    private const float SPEED_UP = 0.5f;
+    private const float MAX_SPEED = 6;
+
+    public float Speed => speed;
 
     // Start is called before the first frame update
     void Awake()
@@ -31,7 +43,7 @@ public class CharController : MonoBehaviour
         }
 
 
-        rb.transform.position = transform.position + transform.forward * 2 * Time.deltaTime;
+        rb.transform.position = transform.position + transform.forward * speed * Time.deltaTime;
     }
 
 
@@ -88,11 +100,46 @@ public class CharController : MonoBehaviour
         if (other.tag == "Crystal")
         {
             Destroy(other.gameObject);
-            gameManager.IncreaseScore();
+            int score = gameManager.IncreaseScore();
+            CheckScoreForSpeedUp(score);
 
             GameObject gameObject = Instantiate(crystalEffect, rayStart.transform.position, Quaternion.identity);
             Destroy(gameObject, 2);
             Destroy(other.gameObject);
         }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        GameObject collisionGameObject = collision.gameObject;
+        if (collisionGameObject.tag == "RoadPart")
+        {
+            StartCoroutine(RemoveRoadPart(collisionGameObject));
+        }
+        road.CreateNewRoadPart();
+    }
+
+    private void CheckScoreForSpeedUp(int score)
+    {
+        if (score % 5 == 0 && speed + SPEED_UP <= MAX_SPEED)
+        {
+            speed += SPEED_UP;
+            StartCoroutine(ShowSpeedUpText());
+            speedUpAudio.Play();
+        }
+    }
+
+    private IEnumerator RemoveRoadPart(GameObject gameObject)
+    {
+        yield return new WaitForSeconds(3);
+        Destroy(gameObject);
+    }
+
+    private IEnumerator ShowSpeedUpText()
+    {
+        yield return new WaitForSeconds(0.1f);
+        speedUpText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.4f);
+        speedUpText.gameObject.SetActive(false);
     }
 }

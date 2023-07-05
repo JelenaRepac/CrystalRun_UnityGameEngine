@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         gameStarted = true;
-        FindObjectOfType<Road>().StartBuilding();
+        //FindObjectOfType<Road>().StartBuilding();
     }
 
     private void Update()
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public void IncreaseScore()
+    public int IncreaseScore()
     {
         score++;
         scoreText.text = score.ToString();
@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Highscore", score);
             highscoreText.text = "Best: " + score.ToString();
         }
+
+        return score;
     }
 
     public int GetHighScore()
