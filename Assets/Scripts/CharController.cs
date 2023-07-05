@@ -89,6 +89,10 @@ public class CharController : MonoBehaviour
         {
             Destroy(other.gameObject);
             gameManager.IncreaseScore();
+
+            GameObject gameObject = Instantiate(crystalEffect, rayStart.transform.position, Quaternion.identity);
+            Destroy(gameObject, 2);
+            Destroy(other.gameObject);
         }
     }
 }
