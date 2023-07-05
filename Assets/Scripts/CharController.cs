@@ -51,7 +51,7 @@ public class CharController : MonoBehaviour
         }
         else
         {
-            //anim.SetTrigger("notFallingAnymore");
+            anim.SetTrigger("NotFallingAnymore");
         }
 
         if (transform.position.y < -2)
