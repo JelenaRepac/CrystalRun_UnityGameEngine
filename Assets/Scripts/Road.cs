@@ -8,11 +8,6 @@ public class Road : MonoBehaviour
 
     private int roadCount = 0;
 
-    public void StartBuilding()
-    {
-        InvokeRepeating("CreateNewRoadPart", 1f, .5f);
-    }
-
     public void CreateNewRoadPart()
     {
         Vector3 spawnPos;
